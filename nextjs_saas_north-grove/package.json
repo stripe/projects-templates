@@ -16,6 +16,11 @@
     "react-dom": "^19.2.5",
     "stripe": "^19.2.0"
   },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.10"
+    }
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.4",
     "@types/node": "^24.2.1",

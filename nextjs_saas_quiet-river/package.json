@@ -16,6 +16,11 @@
     "react-dom": "^19.2.5",
     "stripe": "^19.2.0"
   },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.10"
+    }
+  },
   "devDependencies": {
     "@opennextjs/cloudflare": "1.19.9",
     "@tailwindcss/postcss": "^4.2.4",

@@ -16,13 +16,18 @@
     "react-dom": "^19.2.5",
     "stripe": "^19.2.0"
   },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.10"
+    }
+  },
   "devDependencies": {
-    "@netlify/plugin-nextjs": "5.15.11",
+    "@netlify/plugin-nextjs": "5.15.12",
     "@tailwindcss/postcss": "^4.2.4",
     "@types/node": "^24.2.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "netlify": "26.0.1",
+    "netlify": "26.1.0",
     "postcss": "^8.5.13",
     "tailwindcss": "^4.2.4",
     "typescript": "^5.9.3"
