@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 
 
     if (!priceId) {
-      throw new Error('Missing STRIPE_PRICE_ID. Apply the Terraform in infra/stripe and add the output to .env.local or your deployment environment.');
+      throw new Error('Missing STRIPE_PRICE_ID. Run `npm run setup:stripe` and add the generated values to your deployment environment.');
     }
 
     const session = await stripe.checkout.sessions.create({

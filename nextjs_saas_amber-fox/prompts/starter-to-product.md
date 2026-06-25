@@ -3,7 +3,7 @@ Turn this generated app into a real product for Next.js SaaS Starter.
 Start by reading `AGENTS.md`, then follow this workflow:
 
 1. Starter audit
-   - Inspect `lib/app-config.ts`, `app/page.tsx`, `app/checkout/page.tsx`, `app/dashboard/page.tsx`, `app/api/health/route.ts`, and `infra/stripe/main.tf`.
+   - Inspect `lib/app-config.ts`, `app/page.tsx`, `app/checkout/page.tsx`, `app/dashboard/page.tsx`, `app/api/health/route.ts`, and `scripts/setup-stripe.mjs`.
    - Figure out which integrations are already included and what must stay intact.
    - Do not mistake the generic starter copy or layout for a real product brief.
 

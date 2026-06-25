@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
     if (!webhookSecret) {
       throw new Error(
-        'Missing STRIPE_WEBHOOK_SECRET. Add the Terraform output to your environment before using the Stripe webhook route.',
+        'Missing STRIPE_WEBHOOK_SECRET. Add a Stripe webhook signing secret to your environment before using the Stripe webhook route.',
       );
     }
 

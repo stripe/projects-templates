@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "setup:stripe": "node scripts/setup-stripe.mjs",
     "deploy": "node scripts/deploy-vercel.mjs"
   },
   "dependencies": {

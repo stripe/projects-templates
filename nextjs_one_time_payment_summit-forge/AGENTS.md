@@ -5,7 +5,7 @@ This repo is a generated Next.js one-time payment starter. Your job is to turn i
 ## Start here
 
 1. Read `prompts/starter-to-product.md`.
-2. Inspect `lib/app-config.ts`, `app/page.tsx`, `app/checkout/page.tsx`, `app/dashboard/page.tsx`, `app/api/health/route.ts`, and `infra/stripe/main.tf`.
+2. Inspect `lib/app-config.ts`, `app/page.tsx`, `app/checkout/page.tsx`, `app/dashboard/page.tsx`, `app/api/health/route.ts`, and `scripts/setup-stripe.mjs`.
 3. If the product direction is not already clear, start with discovery questions before making large changes.
 4. Get a confirmed product name from the user before naming the product yourself, unless the user explicitly asks you to invent one.
 5. Restate the product brief and the current implementation phase before coding.
@@ -13,7 +13,7 @@ This repo is a generated Next.js one-time payment starter. Your job is to turn i
 
 ## Non-negotiables
 
-- Keep durable Stripe resources such as products, prices, webhooks, and entitlements managed in Terraform under `infra/stripe/main.tf`.
+- Keep durable Stripe resources such as products, prices, webhooks, and entitlements set up through explicit setup scripts or dashboard-managed configuration.
 - Do not add one-off runtime Stripe API calls to create or mutate durable catalog resources.
 - Runtime Stripe API calls are still fine for ephemeral actions such as Checkout Sessions, PaymentIntents, refunds, and customer-specific purchase flows.
 - Preserve the existing route structure unless the user explicitly asks for a larger rewrite.

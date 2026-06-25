@@ -17,6 +17,8 @@ services:
   - clerk/auth
   - render/postgres
 next_steps:
+  - label: Set up Stripe products
+    command: npm run setup:stripe
   - label: Run locally
     command: npm run dev
   - label: Build product with Codex
