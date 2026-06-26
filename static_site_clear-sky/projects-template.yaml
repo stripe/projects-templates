@@ -30,6 +30,15 @@ tier_plans:
     starter_paid: Vercel/pro
     higher_scale: Vercel/pro
   posthog/analytics:
-    free_lowest_cost: PostHog/free
-    starter_paid: PostHog/pay_as_you_go
-    higher_scale: PostHog/pay_as_you_go
+    free_lowest_cost:
+      plan_service: PostHog/free
+      provider_configuration:
+        region: EU
+    starter_paid:
+      plan_service: PostHog/pay_as_you_go
+      provider_configuration:
+        region: EU
+    higher_scale:
+      plan_service: PostHog/pay_as_you_go
+      provider_configuration:
+        region: EU
