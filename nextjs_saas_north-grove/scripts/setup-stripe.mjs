@@ -1,4 +1,6 @@
+import { execFileSync } from 'node:child_process';
 import * as fs from 'node:fs';
+import * as os from 'node:os';
 import * as path from 'node:path';
 import * as readline from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
@@ -63,15 +65,80 @@ function getEnvValue(key) {
   return process.env[key]?.trim() || envValues[key]?.trim() || '';
 }
 
+function resolveSecretKeyFromStripeCli() {
+  try {
+    const output = execFileSync('stripe', ['config', '--list'], {
+      encoding: 'utf-8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    return parseTestModeApiKeyFromStripeCliConfig(output);
+  } catch {
+    const configPath = process.env.STRIPE_CONFIG?.trim() || path.join(os.homedir(), '.config', 'stripe', 'config.toml');
+    if (!fs.existsSync(configPath)) {
+      return { profileName: '', secretKey: '' };
+    }
+    return parseTestModeApiKeyFromStripeCliConfig(fs.readFileSync(configPath, 'utf-8'));
+  }
+}
+
+function parseTestModeApiKeyFromStripeCliConfig(config) {
+  let profileName = 'default';
+  for (const line of config.split(/\r?\n/)) {
+    const projectMatch = line.match(/^project-name\s*=\s*(?:"([^"]+)"|([^\s]+))/);
+    if (projectMatch) {
+      profileName = (projectMatch[1] || projectMatch[2] || 'default').trim();
+      break;
+    }
+  }
+
+  const activeSectionHeader =
+    profileName === 'default' ? '[default]' : `["${profileName}"]`;
+  let inActiveSection = false;
+
+  for (const line of config.split(/\r?\n/)) {
+    if (line.trim() === activeSectionHeader) {
+      inActiveSection = true;
+      continue;
+    }
+    if (/^\[/.test(line.trim())) {
+      inActiveSection = false;
+      continue;
+    }
+    if (!inActiveSection) {
+      continue;
+    }
+
+    const keyMatch = line.match(/^test_mode_api_key\s*=\s*"([^"]*)"/);
+    if (!keyMatch) {
+      continue;
+    }
+
+    const secretKey = keyMatch[1].trim();
+    if (secretKey.startsWith('sk_test_') && !secretKey.includes('*')) {
+      return { profileName, secretKey };
+    }
+  }
+
+  return { profileName: '', secretKey: '' };
+}
+
 async function resolveSecretKey() {
   const existing = getEnvValue('STRIPE_SECRET_KEY') || getEnvValue('STRIPE_API_KEY');
   if (existing) {
     return existing;
   }
 
+  const { profileName, secretKey: cliSecretKey } = resolveSecretKeyFromStripeCli();
+  if (cliSecretKey) {
+    console.log(`Using Stripe test mode key from CLI profile "${profileName}".`);
+    return cliSecretKey;
+  }
+
   const rl = readline.createInterface({ input, output });
   try {
-    const value = await rl.question('Paste your Stripe secret key (sk_test_...): ');
+    const value = await rl.question(
+      'Paste your Stripe secret key (sk_test_...), or run `stripe login` first: ',
+    );
     return value.trim();
   } finally {
     rl.close();
