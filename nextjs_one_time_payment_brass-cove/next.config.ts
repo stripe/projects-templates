@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: process.env.POSTHOG_ANALYTICS_API_KEY,
+  },
   // Reverse proxy for PostHog (matches api_host in instrumentation-client.ts).
   async rewrites() {
     return [
