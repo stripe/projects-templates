@@ -12,8 +12,10 @@ const PRICE_UNIT_AMOUNT = 1000;
 
 const rootDir = process.cwd();
 const envPath = path.join(rootDir, ENV_FILE);
-const baseEnvValues = readEnvFile(path.join(rootDir, '.env'));
-const localEnvValues = readEnvFile(envPath);
+const envValues = {
+  ...readEnvFile(path.join(rootDir, '.env')),
+  ...readEnvFile(envPath),
+};
 
 const existingPriceId = getEnvValue('STRIPE_PRICE_ID');
 if (existingPriceId) {
@@ -59,9 +61,7 @@ console.log(`Price: ${price.id}`);
 console.log(`Updated ${ENV_FILE}.`);
 
 function getEnvValue(key) {
-  return (
-    process.env[key]?.trim() || localEnvValues[key]?.trim() || baseEnvValues[key]?.trim() || ''
-  );
+  return process.env[key]?.trim() || envValues[key]?.trim() || '';
 }
 
 function resolveSecretKeyFromStripeCli() {
