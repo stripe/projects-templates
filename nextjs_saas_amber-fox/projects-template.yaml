@@ -45,12 +45,12 @@ tier_plans:
     free_lowest_cost:
       plan_service: PostHog/free
       provider_configuration:
-        region: EU
+        region: US
     starter_paid:
       plan_service: PostHog/pay_as_you_go
       provider_configuration:
-        region: EU
+        region: US
     higher_scale:
       plan_service: PostHog/pay_as_you_go
       provider_configuration:
-        region: EU
+        region: US
