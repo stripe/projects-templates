@@ -1,0 +1,10 @@
+node_modules
+.next
+out
+dist
+.terraform/
+*.tfstate
+*.tfstate.*
+.DS_Store
+.env.local
+.env*.local

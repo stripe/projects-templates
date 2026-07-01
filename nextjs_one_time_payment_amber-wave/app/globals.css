@@ -1,0 +1,25 @@
+@import "tailwindcss" source(none);
+
+:root {
+  interpolate-size: allow-keywords;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+}
+
+@source "../app";
+@source "../components";
+@source "../lib";
+
+details > summary {
+  list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
