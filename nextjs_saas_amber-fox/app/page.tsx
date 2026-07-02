@@ -9,6 +9,7 @@ import { DeployCard, DeployCommand } from '@/components/deploy-command';
 import { AppTopbar } from '@/components/app-topbar';
 import { CopyButton } from '@/components/copy-button';
 import { appConfig } from '@/lib/app-config';
+import { twilioEmailConfigured } from '@/lib/twilio-config';
 
 function StatusBadge({
   label,
@@ -297,6 +298,68 @@ export default async function HomePage() {
               </Link>
             </li>
 
+            <li className="relative">
+              {twilioEmailConfigured ? (
+                <a
+                  href="https://1console.twilio.com"
+                  rel="noreferrer"
+                  target="_blank"
+                  className="group relative flex h-full flex-col justify-between rounded-md border border-neutral-950/10 p-6 transition-all duration-200 ease-out hover:border-neutral-950/0 hover:bg-white hover:shadow-lg"
+                >
+                  <div className="relative">
+                    <img alt="" className="inline-block h-8 w-8 rounded-sm" src="/icons/twilio.svg" />
+                    <div className="mb-1.5 mt-3 flex items-center gap-2">
+                      <h3 className="text-lg font-medium text-neutral-950">Twilio Email</h3>
+                      <StatusBadge label="Configured" tone="configured" />
+                    </div>
+                    <p className="mb-3 text-pretty text-neutral-600">
+                      Twilio sends the welcome email that greets subscribers the moment their subscription goes active.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1 font-medium">
+                    Open Twilio Console
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-3.5 translate-y-0.25 transition-transform duration-200 group-hover:translate-x-0.5">
+                      <path fillRule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </a>
+              ) : (
+                <div className="relative flex h-full flex-col rounded-md border border-neutral-950/10 p-6">
+                  <div className="relative">
+                    <img alt="" className="inline-block h-8 w-8 rounded-sm" src="/icons/twilio.svg" />
+                    <div className="mb-1.5 mt-3 flex items-center gap-2">
+                      <h3 className="text-lg font-medium text-neutral-950">Twilio Email</h3>
+                      <StatusBadge label="Needs config" tone="pending" />
+                    </div>
+                    <p className="mb-3 text-pretty text-neutral-600">
+                      Twilio sends the welcome email when a subscription starts. Finish setup to turn it on:
+                    </p>
+                  </div>
+                  <ol className="flex flex-col gap-2 text-sm text-neutral-600">
+                    <li className="flex gap-2">
+                      <span className="font-mono text-xs text-neutral-400">1.</span>
+                      <span>
+                        Sign in at{' '}
+                        <a href="https://1console.twilio.com" rel="noreferrer" target="_blank" className="font-medium text-neutral-950 underline underline-offset-2">
+                          1console.twilio.com
+                        </a>{' '}
+                        and add a verified sending domain.
+                      </span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="font-mono text-xs text-neutral-400">2.</span>
+                      <span>
+                        Add the sender address to your env as{' '}
+                        <code className="rounded bg-neutral-950/5 px-1 py-0.5 font-mono text-xs text-neutral-950">TWILIO_EMAIL_FROM_ADDRESS</code>
+                        {' '}(and optionally{' '}
+                        <code className="rounded bg-neutral-950/5 px-1 py-0.5 font-mono text-xs text-neutral-950">TWILIO_EMAIL_FROM_NAME</code>).
+                      </span>
+                    </li>
+                  </ol>
+                </div>
+              )}
+            </li>
+
             <li className="relative sm:col-span-2 md:col-span-1">
               <DeployCard className="group relative flex h-full flex-col justify-between rounded-md border border-neutral-950/10 px-6 pb-4 pt-6 transition-all duration-200 ease-out hover:border-neutral-950/0 hover:bg-white hover:shadow-lg">
                 <div className="relative">
@@ -316,7 +379,7 @@ export default async function HomePage() {
             </li>
 
 
-            <li className="relative sm:col-span-2 md:col-span-3">
+            <li className="relative sm:col-span-2 md:col-span-2">
               {databaseDashboardUrl ? (
                 <a
                   className="group grid overflow-hidden rounded-md border border-neutral-950/10 transition-all duration-200 ease-out hover:border-neutral-950/0 hover:bg-white hover:shadow-lg md:grid-cols-2"

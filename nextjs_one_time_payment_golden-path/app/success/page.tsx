@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import { appConfig } from '@/lib/app-config';
 import { databaseConfigured } from '@/lib/database-config';
 import { syncPurchaseFromCheckoutSessionID } from '@/lib/purchase-sync';
+import { sendWelcomeEmailForPurchaseOnce } from '@/lib/twilio-email';
 import {
   bodyCopy,
   buttonRow,
@@ -35,6 +37,14 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
       } else if (result?.status === 'paid') {
         purchaseMessage =
           'This checkout completed, but there was no signed-in user to attach in your starter database.';
+      }
+
+      if (result?.status === 'paid' && result.email) {
+        await sendWelcomeEmailForPurchaseOnce({
+          stripePaymentIntentId: result.stripePaymentIntentId,
+          to: result.email,
+          productName: appConfig.name,
+        });
       }
     } catch (error) {
       purchaseMessage =

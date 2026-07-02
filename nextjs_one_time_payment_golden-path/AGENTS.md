@@ -18,6 +18,7 @@ This repo is a generated Next.js one-time payment starter. Your job is to turn i
 - Runtime Stripe API calls are still fine for ephemeral actions such as Checkout Sessions, PaymentIntents, refunds, and customer-specific purchase flows.
 - Preserve the existing route structure unless the user explicitly asks for a larger rewrite.
 - Preserve any working Clerk, database, and hosting integration already present in the repo.
+- Preserve the Twilio email integration: a post-purchase welcome email sent from both the Stripe webhook and the success page via the shared `sendWelcomeEmailForPurchaseOnce` helper in `lib/twilio-email.ts`, deduped by an atomic database guard so it only sends once. Keep sends best-effort so they never block checkout. Customize the copy rather than removing the wiring.
 - Keep `/api/health` useful as a verification endpoint.
 - Remove starter/template readiness content from the product landing page. Do not keep or reintroduce auth, billing, storage, or hosting status panels as end-user product UI.
 

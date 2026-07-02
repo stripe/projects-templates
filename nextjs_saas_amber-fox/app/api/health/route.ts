@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { clerkConfigured } from '@/lib/clerk-config';
 import { databaseConfigured } from '@/lib/database-config';
+import { twilioEmailConfigured } from '@/lib/twilio-config';
 
 export async function GET() {
   return NextResponse.json({
@@ -12,5 +13,6 @@ export async function GET() {
     stripeWebhookConfigured: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
     clerkConfigured: clerkConfigured,
     databaseConfigured,
+    twilioEmailConfigured,
   });
 }
