@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import { appConfig } from '@/lib/app-config';
 import { databaseConfigured } from '@/lib/database-config';
 import { syncSubscriptionFromCheckoutSessionID } from '@/lib/subscription-sync';
+import { sendWelcomeEmailForSubscriptionOnce } from '@/lib/twilio-email';
 import {
   bodyCopy,
   buttonRow,
@@ -35,6 +37,17 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
       } else if (result) {
         subscriptionMessage =
           'This checkout completed, but there was no signed-in user to attach in your starter database.';
+      }
+
+      if (
+        (result?.status === 'active' || result?.status === 'trialing') &&
+        result.email
+      ) {
+        await sendWelcomeEmailForSubscriptionOnce({
+          stripeSubscriptionId: result.stripeSubscriptionId,
+          to: result.email,
+          productName: appConfig.name,
+        });
       }
     } catch (error) {
       subscriptionMessage =

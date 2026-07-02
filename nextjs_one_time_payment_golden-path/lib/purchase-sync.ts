@@ -9,6 +9,7 @@ import {
 } from '@/lib/data';
 
 type SyncPurchaseResult = {
+  email: string | null;
   status: string;
   stripePaymentIntentId: string;
   userId: string | null;
@@ -69,6 +70,7 @@ export async function syncPurchaseFromCheckoutSession(
   }
 
   const stripeCustomerID = asStripeID(session.customer);
+  const email = getSessionEmail(session);
   const userID = await resolveUserIDForSession(session);
 
   const purchase = await upsertPurchaseFromCheckout({
@@ -87,6 +89,7 @@ export async function syncPurchaseFromCheckoutSession(
   }
 
   return {
+    email,
     status: purchase.status,
     stripePaymentIntentId: purchase.stripePaymentIntentId,
     userId: purchase.userId,
