@@ -1,0 +1,39 @@
+{
+  "name": "nextjs-saas-render-netlify",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "setup:stripe": "node scripts/setup-stripe.mjs",
+    "deploy": "node scripts/deploy-netlify.mjs"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^6.39.3",
+    "next": "^16.2.4",
+    "mixpanel": "^0.18.0",
+    "mixpanel-browser": "^2.56.0",
+    "postgres": "^3.4.7",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "stripe": "^19.2.0"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.10"
+    }
+  },
+  "devDependencies": {
+    "@netlify/plugin-nextjs": "5.15.11",
+    "@tailwindcss/postcss": "^4.2.4",
+    "@types/mixpanel-browser": "^2.50.2",
+    "@types/node": "^24.2.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "netlify": "26.0.2",
+    "postcss": "^8.5.13",
+    "tailwindcss": "^4.2.4",
+    "typescript": "^5.9.3"
+  }
+}
