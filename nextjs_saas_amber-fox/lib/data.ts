@@ -192,6 +192,44 @@ export async function findLatestSubscriptionForUser(userId: string) {
   return rows[0] ? mapSubscription(rows[0]) : null;
 }
 
+/**
+ * Atomically claim the right to send the welcome email for a subscription.
+ *
+ * Returns true for exactly one caller: the conditional update only matches
+ * while welcome_email_sent_at is null, so concurrent callers (the Stripe
+ * webhook and the success page) cannot both win. A false result means the email
+ * was already sent or is being sent by another caller.
+ */
+export async function claimSubscriptionWelcomeEmail(stripeSubscriptionId: string) {
+  await ensureDatabaseSchema();
+
+  const sql = getDatabaseClient();
+  const rows = (await sql`
+    update subscriptions
+    set welcome_email_sent_at = now()
+    where stripe_subscription_id = ${stripeSubscriptionId}
+      and welcome_email_sent_at is null
+    returning id
+  `) as Array<Record<string, unknown>>;
+
+  return rows.length > 0;
+}
+
+/**
+ * Release a welcome-email claim by clearing the timestamp, so a later attempt
+ * can retry. Called when the send fails after the claim was won.
+ */
+export async function releaseSubscriptionWelcomeEmailClaim(stripeSubscriptionId: string) {
+  await ensureDatabaseSchema();
+
+  const sql = getDatabaseClient();
+  await sql`
+    update subscriptions
+    set welcome_email_sent_at = null
+    where stripe_subscription_id = ${stripeSubscriptionId}
+  `;
+}
+
 export async function upsertSubscriptionFromCheckout({
   status,
   stripeCheckoutSessionId,

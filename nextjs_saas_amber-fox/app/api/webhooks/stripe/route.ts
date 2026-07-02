@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 import { getStripeClient } from '@/lib/stripe';
 import { syncSubscriptionFromCheckoutSession } from '@/lib/subscription-sync';
 import { getPostHogClient } from '@/lib/posthog-server';
+import { sendWelcomeEmailForSubscriptionOnce } from '@/lib/twilio-email';
+import { appConfig } from '@/lib/app-config';
 
 export async function POST(request: Request) {
   try {
@@ -46,6 +48,17 @@ export async function POST(request: Request) {
           },
         });
         await posthog.flush();
+      }
+
+      if (
+        (result?.status === 'active' || result?.status === 'trialing') &&
+        result.email
+      ) {
+        await sendWelcomeEmailForSubscriptionOnce({
+          stripeSubscriptionId: result.stripeSubscriptionId,
+          to: result.email,
+          productName: appConfig.name,
+        });
       }
     }
 

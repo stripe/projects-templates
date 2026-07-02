@@ -18,6 +18,7 @@ This repo is a generated Next.js SaaS starter. Your job is to turn it into a spe
 - Runtime Stripe API calls are still fine for ephemeral actions such as Checkout Sessions, PaymentIntents, portal sessions, and customer-specific subscription changes.
 - Preserve the existing route structure unless the user explicitly asks for a larger rewrite.
 - Preserve any working Clerk, database, and hosting integration already present in the repo.
+- Preserve the Twilio email integration: a subscription welcome email sent from both the Stripe webhook and the success page via the shared `sendWelcomeEmailForSubscriptionOnce` helper in `lib/twilio-email.ts`, deduped by an atomic database guard so it only sends once. Keep sends best-effort so they never block checkout. Customize the copy rather than removing the wiring.
 - Keep `/api/health` useful as a verification endpoint.
 - Remove starter/template readiness content from the product landing page. Do not keep or reintroduce auth, billing, storage, or hosting status panels as end-user product UI.
 
@@ -92,3 +93,4 @@ This repo is a generated Next.js SaaS starter. Your job is to turn it into a spe
 - Verify landing, checkout, success, and cancel routes after major copy or layout changes.
 - If auth is included, verify the sign-in and dashboard flow still works.
 - If the database is included, preserve the existing subscription sync path.
+- If Twilio email copy changed, verify a completed test subscription still sends the welcome email and the webhook still returns 200, and that `/api/health` still reports `twilioEmailConfigured`.

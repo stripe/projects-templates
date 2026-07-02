@@ -70,6 +70,11 @@ export async function ensureDatabaseSchema() {
         create index if not exists subscriptions_user_id_idx
         on subscriptions (user_id)
       `;
+
+      await sql`
+        alter table subscriptions
+        add column if not exists welcome_email_sent_at timestamptz
+      `;
     })().catch((error) => {
       schemaPromise = null;
       throw error;

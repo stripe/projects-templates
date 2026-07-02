@@ -9,6 +9,7 @@ import {
 } from '@/lib/data';
 
 type SyncSubscriptionResult = {
+  email: string | null;
   status: string;
   stripeSubscriptionId: string;
   userId: string | null;
@@ -77,6 +78,7 @@ export async function syncSubscriptionFromCheckoutSession(
   }
 
   const stripeCustomerID = asStripeID(session.customer);
+  const email = getSessionEmail(session);
   const userID = await resolveUserIDForSession(session);
 
   const subscription = await upsertSubscriptionFromCheckout({
@@ -95,6 +97,7 @@ export async function syncSubscriptionFromCheckoutSession(
   }
 
   return {
+    email,
     status: subscription.status,
     stripeSubscriptionId: subscription.stripeSubscriptionId,
     userId: subscription.userId,

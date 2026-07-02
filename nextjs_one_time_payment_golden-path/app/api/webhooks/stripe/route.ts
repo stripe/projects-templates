@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 import { getStripeClient } from '@/lib/stripe';
 import { syncPurchaseFromCheckoutSession } from '@/lib/purchase-sync';
 import { getPostHogClient } from '@/lib/posthog-server';
+import { sendWelcomeEmailForPurchaseOnce } from '@/lib/twilio-email';
+import { appConfig } from '@/lib/app-config';
 
 export async function POST(request: Request) {
   try {
@@ -46,6 +48,14 @@ export async function POST(request: Request) {
           },
         });
         await posthog.flush();
+      }
+
+      if (result?.status === 'paid' && result.email) {
+        await sendWelcomeEmailForPurchaseOnce({
+          stripePaymentIntentId: result.stripePaymentIntentId,
+          to: result.email,
+          productName: appConfig.name,
+        });
       }
     }
 
