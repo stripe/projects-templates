@@ -14,6 +14,7 @@ export function initMixpanel(): boolean {
   }
 
   mixpanel.init(token, {
+    api_host: process.env.NEXT_PUBLIC_MIXPANEL_INGESTION_URL,
     track_pageview: 'url-with-path',
     persistence: 'localStorage',
     debug: process.env.NODE_ENV === 'development',

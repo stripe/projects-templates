@@ -2,10 +2,20 @@ import Mixpanel from 'mixpanel';
 
 let mixpanelClient: Mixpanel.Mixpanel | null = null;
 
+function resolveMixpanelHost() {
+  const rawHost =
+    process.env.MIXPANEL_INGESTION_URL ||
+    process.env.MIXPANEL_API_URL ||
+    process.env.MIXPANEL_API_HOST ||
+    'api.mixpanel.com';
+
+  return rawHost.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+}
+
 export function getMixpanelClient() {
   if (!mixpanelClient) {
-    mixpanelClient = Mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_TOKEN!, {
-      host: process.env.MIXPANEL_API_HOST || 'api.mixpanel.com',
+    mixpanelClient = Mixpanel.init(process.env.MIXPANEL_PROJECT_TOKEN!, {
+      host: resolveMixpanelHost(),
     });
   }
 
