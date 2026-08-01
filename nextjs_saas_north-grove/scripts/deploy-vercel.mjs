@@ -153,6 +153,41 @@ function shouldSyncEnvironmentValue(key, value) {
   return true;
 }
 
+function deriveClerkEnvironmentValues(values) {
+  const rawValue = values.CLERK_ENVIRONMENTS;
+  if (!rawValue) {
+    return;
+  }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(rawValue);
+  } catch {
+    return;
+  }
+
+  const derivedEnvironment = parsed?.development ?? parsed?.production ?? null;
+  if (!derivedEnvironment) {
+    return;
+  }
+
+  if (!values.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && derivedEnvironment.publishable_key) {
+    values.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = derivedEnvironment.publishable_key;
+  }
+
+  if (!values.CLERK_SECRET_KEY && derivedEnvironment.secret_key) {
+    values.CLERK_SECRET_KEY = derivedEnvironment.secret_key;
+  }
+
+  // @clerk/nextjs reads CLERK_ENCRYPTION_KEY once from process.env at module
+  // import time, not per-request, so it needs to land on Vercel as a real
+  // project env var here rather than only being derived at runtime by
+  // lib/clerk-config.ts, which different serverless bundles can race against.
+  if (!values.CLERK_ENCRYPTION_KEY && derivedEnvironment.secret_key) {
+    values.CLERK_ENCRYPTION_KEY = derivedEnvironment.secret_key;
+  }
+}
+
 function collectDeploymentEnvironmentValues(sourceValues) {
   const values = {};
 
@@ -168,6 +203,8 @@ function collectDeploymentEnvironmentValues(sourceValues) {
 
     values[key] = trimmed;
   }
+
+  deriveClerkEnvironmentValues(values);
 
   return values;
 }
