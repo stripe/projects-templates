@@ -48,6 +48,10 @@ export const clerkSecretKey = firstNonEmpty(
   derivedEnvironment?.secret_key,
 );
 
+// Local-dev fallback only. @clerk/nextjs reads these once at module import
+// time. Middleware and page-render run as separate serverless bundles, so
+// this runtime backfill can't reliably set them in production.
+// scripts/deploy-vercel.mjs syncs them as real Vercel env vars instead.
 if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && clerkPublishableKey) {
   process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = clerkPublishableKey;
 }
