@@ -23,7 +23,7 @@
     }
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "1.19.9",
+    "@opennextjs/cloudflare": "1.20.2",
     "@tailwindcss/postcss": "^4.2.4",
     "@types/node": "^24.2.1",
     "@types/react": "^19.2.14",
